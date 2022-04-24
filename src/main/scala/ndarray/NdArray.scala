@@ -1,6 +1,8 @@
 package ndarray
 
-case class NdArray[T, Shape] private (value: Array[T]) {}
+case class NdArray[T, Shape] private (value: Array[T]) {
+  def size: Int = value.length
+}
 
 object NdArray {
 
