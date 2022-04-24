@@ -24,6 +24,32 @@ class NdArrayTest extends AnyFunSpec {
     }
   }
 
+  describe("all") {
+    it("should return true if all elements are true") {
+      assert(NdArray.array[Shape1[3]](Array(true, true, true)).all)
+      assert(
+        NdArray.array[Shape2[2, 3]](Array(Array(true, true, true), Array(true, true, true))).all
+      )
+    }
+
+    it("should return false if any element is false") {
+      assert(!NdArray.array[Shape1[3]](Array(true, false, true)).all)
+      assert(
+        !NdArray.array[Shape2[2, 3]](Array(Array(true, false, true), Array(true, true, true))).all
+      )
+    }
+
+    it("should return true if all elements are not zero") {
+      assert(NdArray.array[Shape1[3]](Array(1, 2, 3)).all)
+      assert(NdArray.array[Shape2[2, 3]](Array(Array(1, 2, 3), Array(4, 5, 6))).all)
+    }
+
+    it("should return false if any element is zero") {
+      assert(!NdArray.array[Shape1[3]](Array(1, 0, 3)).all)
+      assert(!NdArray.array[Shape2[2, 3]](Array(Array(1, 0, 3), Array(4, 5, 6))).all)
+    }
+  }
+
   describe("companion") {
     describe("array") {
       it("should create a new NdArray") {

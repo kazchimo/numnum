@@ -6,6 +6,8 @@ case class NdArray[T, S <: Shape] private (value: Array[T]) {
   def ndim(implicit ndim: NDim[S]): Int = ndim.ndim
 
   def shape(implicit shape: S): shape.S = shape.shape
+
+  def all(implicit all: All[Array[T]]): Boolean = all.all(value)
 }
 
 object NdArray {
