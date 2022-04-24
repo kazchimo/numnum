@@ -9,13 +9,18 @@ trait Shape {
 
   def shape: S
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[S, Len]): len.Out = shape.length
+  def ndim[Len <: Nat](implicit len: Length.Aux[S, Len], toInt: ToInt[Len]): Int = toInt()
 
   def headSize[Head <: Nat, Tail <: HList](implicit
     isH: IsHCons.Aux[S, Head, Tail],
     toInt: ToInt[Head]
   ): Int = toInt()
 
+  def isShape1[Len <: Nat](implicit len: Length.Aux[S, Len], toInt: ToInt[Len]): Boolean = ndim == 1
+
+//  def validShape[T, Head <: Nat, Tail <: HList](
+//    arr: Array[T]
+//  )(implicit isH: IsHCons.Aux[S, Head, Tail], toInt: ToInt[Head]) = arr.size == headSize
 }
 
 object Shape {

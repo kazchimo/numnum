@@ -13,8 +13,8 @@ class NdArrayTest extends AnyFunSpec {
 
   describe("ndim") {
     it("should return the number of dimensions in the array") {
-      assert(NdArray.array1[_3](Array(1, 2, 3)).ndim == _1)
-      assert(NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).ndim == _2)
+      assert(NdArray.array1[_3](Array(1, 2, 3)).ndim == 1)
+      assert(NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).ndim == 2)
     }
   }
 

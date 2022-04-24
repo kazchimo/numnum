@@ -8,7 +8,7 @@ import shapeless.ops.nat.{Diff, Div, ToInt}
 case class NdArray[T, S <: Shape] private (values: Array[T])(implicit s: S) {
   def size: Int = values.length
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[s.S, Len]) = s.ndim[Len]
+  def ndim[Len <: Nat](implicit len: Length.Aux[s.S, Len], toInt: ToInt[Len]): Int = s.ndim
 
   def shape(implicit shape: S): shape.S = shape.shape
 
