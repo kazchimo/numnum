@@ -58,10 +58,12 @@ class NdArrayTest extends AnyFunSpec {
       val arr2 = NdArray.arrange(_2, _5)
       assert(arr2.value.sameElements(Array(2, 3, 4)))
       assert(arr2.shape == _3 :: HNil)
+      assertDoesNotCompile("NdArray.arrange(_5, _2)")
 
       val arr3 = NdArray.arrange(_3, _10, _2)
       assert(arr3.value.sameElements(Array(3, 5, 7, 9)))
       assert(arr3.shape == _4 :: HNil)
+      assertDoesNotCompile("NdArray.arrange(_10, _3, _2)")
     }
   }
 

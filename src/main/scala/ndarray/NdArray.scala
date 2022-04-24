@@ -1,7 +1,7 @@
 package ndarray
 
 import ndarray.Shape.{Shape1, Shape2}
-import shapeless.{Nat, Succ}
+import shapeless.Nat
 import shapeless.ops.nat.{Diff, Div, ToInt}
 
 case class NdArray[T, S <: Shape] private (value: Array[T]) {
