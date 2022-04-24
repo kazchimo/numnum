@@ -46,6 +46,22 @@ class NdArrayTest extends AnyFunSpec {
     }
   }
 
+  describe("arrange") {
+    it("should return an array of the specified shape with the specified values") {
+      val arr1 = NdArray.arrange[_3]
+      assert(arr1.value.sameElements(Array(0, 1, 2)))
+      assert(arr1.shape == Tuple1(_3))
+
+      val arr2 = NdArray.arrange[_2, _5]()
+      assert(arr2.value.sameElements(Array(2, 3, 4)))
+      assert(arr2.shape == Tuple1(_3))
+
+      val arr3 = NdArray.arrange[_3, _10, _2]()
+      assert(arr3.value.sameElements(Array(3, 5, 7, 9)))
+      assert(arr3.shape == Tuple1(_4))
+    }
+  }
+
   describe("companion") {
     describe("array") {
       it("should create a new NdArray") {
