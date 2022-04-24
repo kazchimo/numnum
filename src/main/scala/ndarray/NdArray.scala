@@ -2,6 +2,8 @@ package ndarray
 
 case class NdArray[T, S <: Shape] private (value: Array[T]) {
   def size: Int = value.length
+
+  def ndim(implicit ndim: NDim[S]): Int = ndim.ndim
 }
 
 object NdArray {
