@@ -47,6 +47,38 @@ class NdArrayTest extends AnyFunSpec {
       assert(!NdArray.array1[_3](Array(1, 0, 3)).all)
       assert(!NdArray.array2[_2, _3](Array(Array(1, 0, 3), Array(4, 5, 6))).all)
     }
+
+    it("should return true on empty array") {
+      assert(NdArray.array1[_0](Array[Int]()).all)
+    }
+  }
+
+  describe("any") {
+    it("should return true if any element is true") {
+      assert(NdArray.array1[_3](Array(true, false, true)).any)
+      assert(NdArray.array2[_2, _3](Array(Array(true, false, true), Array(true, true, true))).any)
+    }
+
+    it("should return false if all elements are false") {
+      assert(!NdArray.array1[_3](Array(false, false, false)).any)
+      assert(
+        !NdArray.array2[_2, _3](Array(Array(false, false, false), Array(false, false, false))).any
+      )
+    }
+
+    it("should return true if any element is not zero") {
+      assert(NdArray.array1[_3](Array(1, 0, 3)).any)
+      assert(NdArray.array2[_2, _3](Array(Array(1, 0, 3), Array(4, 5, 6))).any)
+    }
+
+    it("should return false if all elements are zero") {
+      assert(!NdArray.array1[_3](Array(0, 0, 0)).any)
+      assert(!NdArray.array2[_2, _3](Array(Array(0, 0, 0), Array(0, 0, 0))).any)
+    }
+
+    it("should return false on empty array") {
+      assert(!NdArray.array1[_0](Array[Int]()).any)
+    }
   }
 
   describe("arrange") {

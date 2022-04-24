@@ -13,6 +13,8 @@ case class NdArray[T, S <: Shape] private (values: Array[T])(implicit s: S) {
   def shape(implicit shape: S): shape.S = shape.shape
 
   def all(implicit all: All[Array[T]]): Boolean = all.all(values)
+
+  def any(implicit any: Any[Array[T]]): Boolean = any(values)
 }
 
 object NdArray {
