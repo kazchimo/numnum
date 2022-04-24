@@ -4,14 +4,14 @@ import ndarray.Shape.{Shape1, Shape2}
 import shapeless.Nat
 import shapeless.ops.nat.{Diff, Div, ToInt}
 
-case class NdArray[T, S <: Shape] private (value: Array[T]) {
-  def size: Int = value.length
+case class NdArray[T, S <: Shape] private (values: Array[T]) {
+  def size: Int = values.length
 
   def ndim(implicit ndim: NDim[S]): Int = ndim.ndim
 
   def shape(implicit shape: S): shape.S = shape.shape
 
-  def all(implicit all: All[Array[T]]): Boolean = all.all(value)
+  def all(implicit all: All[Array[T]]): Boolean = all.all(values)
 }
 
 object NdArray {
