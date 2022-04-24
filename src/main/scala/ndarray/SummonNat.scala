@@ -1,12 +1,15 @@
 package ndarray
 
-import shapeless.{HList, Nat}
+import shapeless.Nat
+import shapeless.ops.nat.ToInt
 
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 
 trait SummonNat[N <: Nat] {
   val value: N
+
+  def toInt(implicit toInt: ToInt[N]): Int = toInt()
 }
 
 object SummonNat {
