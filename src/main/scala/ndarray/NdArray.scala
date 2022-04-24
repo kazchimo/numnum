@@ -1,6 +1,7 @@
 package ndarray
 
 import ndarray.Shape.{Shape1, Shape2}
+import shapeless.Nat
 
 case class NdArray[T, S <: Shape] private (value: Array[T]) {
   def size: Int = value.length
@@ -30,6 +31,6 @@ object NdArray {
 
   def array[S <: Shape] = new ApplyPartiallyApplied[S]
 
-  def array1[N1 <: DimN]: ApplyPartiallyApplied[Shape1[N1]]                 = array[Shape1[N1]]
-  def array2[N1 <: DimN, N2 <: DimN]: ApplyPartiallyApplied[Shape2[N1, N2]] = array[Shape2[N1, N2]]
+  def array1[N1 <: Nat]: ApplyPartiallyApplied[Shape1[N1]]                = array[Shape1[N1]]
+  def array2[N1 <: Nat, N2 <: Nat]: ApplyPartiallyApplied[Shape2[N1, N2]] = array[Shape2[N1, N2]]
 }

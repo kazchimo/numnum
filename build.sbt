@@ -6,7 +6,11 @@ scalaVersion := "2.13.5"
 
 lazy val root = project
   .in(file(".")).settings(
-    libraryDependencies ++= Seq("org.scalatest" %% "scalatest-funspec" % "3.2.11" % "test")
+    libraryDependencies ++= Seq(
+      "com.chuusai"   %% "shapeless"         % "2.3.9",
+      "org.scala-lang" % "scala-reflect"     % scalaVersion.value,
+      "org.scalatest" %% "scalatest-funspec" % "3.2.11" % "test"
+    )
   )
 
 lazy val nat = project.in(file("nat"))
