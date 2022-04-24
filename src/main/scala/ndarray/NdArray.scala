@@ -1,7 +1,6 @@
 package ndarray
 
-case class NdArray[T, Shape] private (value: Array[T]) {
-}
+case class NdArray[T, Shape] private (value: Array[T]) {}
 
 object NdArray {
   trait NonNothing[T]
@@ -13,9 +12,10 @@ object NdArray {
     implicit def ambiguous2: NonNothing[Nothing] = this
   }
 
-  class ApplyPartiallyApplied[Shape] {
-    def apply[T](value: Array[T])(implicit ev: NonNothing[Shape]): NdArray[T, Shape] = new NdArray[T, Shape](value)
+  class ApplyPartiallyApplied[S <: Shape] {
+    def apply[T](value: Array[T])(implicit ev: NonNothing[S]): NdArray[T, S] =
+      new NdArray[T, S](value)
   }
 
-  def array[Shape] = new ApplyPartiallyApplied[Shape]
+  def array[S <: Shape] = new ApplyPartiallyApplied[S]
 }
