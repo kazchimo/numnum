@@ -15,6 +15,10 @@ class NdArrayTest extends AnyFunSpec {
       it("should create a new NdArray") {
         NdArray.array[Shape1[3]](Array(1, 2, 3))
       }
+
+      it("should not compile without Shape type parameter") {
+        assertDoesNotCompile("NdArray.array(Array(1, 2, 3))")
+      }
     }
   }
 }
