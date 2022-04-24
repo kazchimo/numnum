@@ -1,3 +1,3 @@
 package object ndarray {
-  type DimN = Int with Singleton
+  type DimN = Int
 }

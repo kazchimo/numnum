@@ -17,6 +17,13 @@ class NdArrayTest extends AnyFunSpec {
     }
   }
 
+  describe("shape") {
+    it("should return the shape of the array") {
+      assert(NdArray.array[Shape1[3]](Array(1, 2, 3)).shape == Tuple1(3))
+      assert(NdArray.array[Shape2[2, 3]](Array(Array(1, 2, 3), Array(4, 5, 6))).shape == (2, 3))
+    }
+  }
+
   describe("companion") {
     describe("array") {
       it("should create a new NdArray") {

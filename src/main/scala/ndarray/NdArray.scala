@@ -4,6 +4,8 @@ case class NdArray[T, S <: Shape] private (value: Array[T]) {
   def size: Int = value.length
 
   def ndim(implicit ndim: NDim[S]): Int = ndim.ndim
+
+  def shape(implicit shape: S): shape.S = shape.shape
 }
 
 object NdArray {
