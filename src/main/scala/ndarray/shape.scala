@@ -1,5 +1,6 @@
 package ndarray
 
+import shapeless.ops.hlist.Length
 import shapeless.ops.nat.ToInt
 import shapeless.{::, HList, HNil, Nat}
 
@@ -7,6 +8,8 @@ trait Shape {
   type S <: HList
 
   def shape: S
+
+  def ndim[Len <: Nat](implicit len: Length.Aux[S, Len]): len.Out = shape.length
 }
 
 object Shape {
