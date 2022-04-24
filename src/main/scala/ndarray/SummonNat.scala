@@ -1,6 +1,6 @@
 package ndarray
 
-import shapeless.Nat
+import shapeless.{HList, Nat}
 
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox

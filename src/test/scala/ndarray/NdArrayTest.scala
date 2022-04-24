@@ -1,6 +1,7 @@
 package ndarray
 
 import org.scalatest.funspec.AnyFunSpec
+import shapeless.HNil
 import shapeless.Nat._
 
 class NdArrayTest extends AnyFunSpec {
@@ -19,8 +20,10 @@ class NdArrayTest extends AnyFunSpec {
 
   describe("shape") {
     it("should return the shape of the array") {
-      assert(NdArray.array1[_3](Array(1, 2, 3)).shape == Tuple1(_3))
-      assert(NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).shape == (_2, _3))
+      assert(NdArray.array1[_3](Array(1, 2, 3)).shape == _3 :: HNil)
+      assert(
+        NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).shape == _2 :: _3 :: HNil
+      )
     }
   }
 
@@ -50,15 +53,15 @@ class NdArrayTest extends AnyFunSpec {
     it("should return an array of the specified shape with the specified values") {
       val arr1 = NdArray.arrange(_3)
       assert(arr1.value.sameElements(Array(0, 1, 2)))
-      assert(arr1.shape == Tuple1(_3))
+      assert(arr1.shape == _3 :: HNil)
 
       val arr2 = NdArray.arrange(_2, _5)
       assert(arr2.value.sameElements(Array(2, 3, 4)))
-      assert(arr2.shape == Tuple1(_3))
+      assert(arr2.shape == _3 :: HNil)
 
       val arr3 = NdArray.arrange(_3, _10, _2)
       assert(arr3.value.sameElements(Array(3, 5, 7, 9)))
-      assert(arr3.shape == Tuple1(_4))
+      assert(arr3.shape == _4 :: HNil)
     }
   }
 

@@ -1,24 +1,27 @@
 package ndarray
 
-import shapeless.Nat
+import shapeless.ops.hlist.Tupler
+import shapeless.{::, HList, HNil, Nat}
 
 trait Shape {
-  type S <: Product
+  type S <: HList
+
+  type Tuple = Tupler[S]#Out
 
   def shape: S
 }
 
 object Shape {
   abstract class Shape1[N1 <: Nat: SummonNat] extends Shape {
-    type S = Tuple1[N1]
+    type S = N1 :: HNil
 
-    def shape: S = Tuple1(SummonNat[N1].value)
+    def shape: S = SummonNat[N1].value :: HNil
   }
 
   abstract class Shape2[N1 <: Nat: SummonNat, N2 <: Nat: SummonNat] extends Shape {
-    type S = (N1, N2)
+    type S = N1 :: N2 :: HNil
 
-    def shape: S = (SummonNat[N1].value, SummonNat[N2].value)
+    def shape: S = SummonNat[N1].value :: SummonNat[N2].value :: HNil
   }
 
   implicit def shape1[N1 <: Nat: SummonNat]: Shape1[N1]                           = new Shape1[N1] {}
