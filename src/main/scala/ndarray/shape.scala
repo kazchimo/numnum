@@ -11,8 +11,11 @@ trait Shape {
 
   def ndim[Len <: Nat](implicit len: Length.Aux[S, Len]): len.Out = shape.length
 
-  def headSize[Head <: Nat, Tail <: HList](implicit isH: IsHCons.Aux[S, Head, Tail]): Head =
-    shape.head
+  def headSize[Head <: Nat, Tail <: HList](implicit
+    isH: IsHCons.Aux[S, Head, Tail],
+    toInt: ToInt[Head]
+  ): Int = toInt()
+
 }
 
 object Shape {
