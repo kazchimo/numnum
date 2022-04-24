@@ -35,30 +35,25 @@ object NdArray {
   def array1[N1 <: Nat]: ApplyPartiallyApplied[Shape1[N1]]                = array[Shape1[N1]]
   def array2[N1 <: Nat, N2 <: Nat]: ApplyPartiallyApplied[Shape2[N1, N2]] = array[Shape2[N1, N2]]
 
-  def arrange[N <: Nat: ToInt]: NdArray[Int, Shape1[N]] = array1[N](Array.range(0, Nat.toInt[N]))
+  def arrange[N <: Nat](n: N)(implicit toInt: ToInt[n.N]): NdArray[Int, Shape1[N]] =
+    array1[N](Array.range(0, Nat.toInt(n)))
 
-  def arrange[Start <: Nat, End <: Nat] = new Arrange2PartiallyApplied[Start, End]
+  def arrange[Start <: Nat, End <: Nat, Len <: Nat](start: Start, end: End)(implicit
+    sToInt: ToInt[Start],
+    eToInt: ToInt[End],
+    diff: Diff.Aux[End, Start, Len]
+  ): NdArray[Int, Shape1[Len]] = array1[Len](Array.range(Nat.toInt[Start], Nat.toInt[End]))
 
-  def arrange[Start <: Nat, End <: Nat, Interval <: Nat] =
-    new Arrange3PartiallyApplied[Start, End, Interval]
-
-  class Arrange2PartiallyApplied[Start <: Nat, End <: Nat] {
-    def apply[Len <: Nat]()(implicit
-      sToInt: ToInt[Start],
-      eToInt: ToInt[End],
-      diff: Diff.Aux[End, Start, Len]
-    ): NdArray[Int, Shape1[Len]] = array1[Len](Array.range(Nat.toInt[Start], Nat.toInt[End]))
-  }
-
-  class Arrange3PartiallyApplied[Start <: Nat, End <: Nat, Interval <: Nat] {
-    def apply[Len <: Nat, Size <: Nat]()(implicit
-      sToInt: ToInt[Start],
-      eToInt: ToInt[End],
-      iToInt: ToInt[Interval],
-      diff: Diff.Aux[End, Start, Len],
-      div: Div.Aux[Len, Interval, Size]
-    ): NdArray[Int, Shape1[Succ[Size]]] =
-      array1(Array.range(Nat.toInt[Start], Nat.toInt[End], Nat.toInt[Interval]))
-  }
-
+  def arrange[Start <: Nat, End <: Nat, Interval <: Nat, Len <: Nat, Size <: Nat](
+    start: Start,
+    end: End,
+    interval: Interval
+  )(implicit
+    sToInt: ToInt[Start],
+    eToInt: ToInt[End],
+    iToInt: ToInt[Interval],
+    diff: Diff.Aux[End, Start, Len],
+    div: Div.Aux[Len, Interval, Size]
+  ): NdArray[Int, Shape1[Size]] =
+    array1(Array.range(Nat.toInt[Start], Nat.toInt[End], Nat.toInt[Interval]))
 }
