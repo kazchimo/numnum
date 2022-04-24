@@ -1,6 +1,6 @@
 package ndarray
 
-import shapeless.ops.hlist.Length
+import shapeless.ops.hlist.{IsHCons, Length}
 import shapeless.ops.nat.ToInt
 import shapeless.{::, HList, HNil, Nat}
 
@@ -10,6 +10,9 @@ trait Shape {
   def shape: S
 
   def ndim[Len <: Nat](implicit len: Length.Aux[S, Len]): len.Out = shape.length
+
+  def headSize[Head <: Nat, Tail <: HList](implicit isH: IsHCons.Aux[S, Head, Tail]): Head =
+    shape.head
 }
 
 object Shape {

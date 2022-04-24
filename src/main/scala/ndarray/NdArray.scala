@@ -18,7 +18,6 @@ case class NdArray[T, S <: Shape] private (values: Array[T])(implicit s: S) {
 }
 
 object NdArray {
-
   trait NonNothing[T]
 
   object NonNothing extends NonNothing[Nothing] {
