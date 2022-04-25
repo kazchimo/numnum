@@ -12,24 +12,27 @@ case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit val 
 
   def toArray: Array[T] = values.toArray
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[s.Shape, Len], summonNat: SummonNat[Len]): Len =
+  def ndim[Len <: Nat](implicit len: Length.Aux[s.ShapeHL, Len], summonNat: SummonNat[Len]): Len =
     s.ndim
 
   def shape[Instances <: HList](implicit
-    liftAll: LiftAll.Aux[SummonNat, s.Shape, Instances],
-    mapper: Mapper.Aux[applySummonNat.type, Instances, s.Shape]
-  ): s.Shape = s.shape
+    liftAll: LiftAll.Aux[SummonNat, s.ShapeHL, Instances],
+    mapper: Mapper.Aux[applySummonNat.type, Instances, s.ShapeHL]
+  ): s.ShapeHL = s.shape
 
   def all(implicit all: All[DenseMatrix[T]]): Boolean = all.all(values)
 
   def any(implicit any: Any[DenseMatrix[T]]): Boolean = any(values)
 
   def size[Instances <: HList, Result <: Nat](implicit
-    fold: LeftFolder.Aux[s.Shape, _1, sumNat.type, Result],
+    fold: LeftFolder.Aux[s.ShapeHL, _1, sumNat.type, Result],
     summon: SummonNat[Result]
   ): Result = s.size
 
-  def reshape[ToShape <: Shape](shape: ToShape)(implicit sameSize: SameSize[S, ToShape]) = ???
+  def reshape[ToShape <: Shape, Head <: Nat](
+    shape: ToShape
+  )(implicit sameSize: SameSize[S, ToShape], res: Reshape[ToShape]): NdArray[T, ToShape] =
+    NdArray[T, ToShape](values.reshape(res.row, res.column))(shape)
 }
 
 object NdArray {

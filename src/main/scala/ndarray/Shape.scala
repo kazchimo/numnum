@@ -2,32 +2,31 @@ package ndarray
 
 import ndarray.Shape.{applySummonNat, sumNat}
 import shapeless.Nat._1
-import shapeless.ops.hlist.{IsHCons, LeftFolder, Length, LiftAll, Mapper}
-import shapeless.ops.nat.{Prod, ToInt}
+import shapeless.ops.hlist.{LeftFolder, Length, LiftAll, Mapper}
+import shapeless.ops.nat.Prod
 import shapeless.{::, HList, HNil, Nat, Poly1, Poly2}
 
 trait Shape {
-  type Shape <: HList
+  type ShapeHL <: HList
 
   def shape[Instances <: HList](implicit
-    liftAll: LiftAll.Aux[SummonNat, Shape, Instances],
-    mapper: Mapper.Aux[applySummonNat.type, Instances, Shape]
-  ): Shape = liftAll.instances.map(applySummonNat)
+    liftAll: LiftAll.Aux[SummonNat, ShapeHL, Instances],
+    mapper: Mapper.Aux[applySummonNat.type, Instances, ShapeHL]
+  ): ShapeHL = liftAll.instances.map(applySummonNat)
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[Shape, Len], summon: SummonNat[Len]): Len =
+  def ndim[Len <: Nat](implicit len: Length.Aux[ShapeHL, Len], summon: SummonNat[Len]): Len =
     summon.value
 
-  def headSize[Head <: Nat, Tail <: HList](implicit
-    isH: IsHCons.Aux[Shape, Head, Tail],
-    toInt: ToInt[Head]
-  ): Int = toInt()
+  def headSize[Head <: Nat](implicit headSize: HeadSize.Aux[ShapeHL, Head]): Int = headSize.int
+
+  def tailShape[Tail <: Shape](implicit tailShape: TailShape.Aux[ShapeHL, Tail]): Tail = tailShape()
 
   def isShapeOf[N <: Nat, Len <: Nat](
     n: N
-  )(implicit len: Length.Aux[Shape, Len], summon: SummonNat[Len]): Boolean = ndim == n
+  )(implicit len: Length.Aux[ShapeHL, Len], summon: SummonNat[Len]): Boolean = ndim == n
 
   def size[Instances <: HList, Result <: Nat](implicit
-    fold: LeftFolder.Aux[Shape, _1, sumNat.type, Result],
+    fold: LeftFolder.Aux[ShapeHL, _1, sumNat.type, Result],
     summon: SummonNat[Result]
   ): Result = summon.value
 }
@@ -48,11 +47,11 @@ object Shape {
   }
 
   case class Shape1[N1 <: Nat]() extends Shape {
-    type Shape = N1 :: HNil
+    type ShapeHL = N1 :: HNil
   }
 
   case class Shape2[N1 <: Nat, N2 <: Nat]() extends Shape {
-    type Shape = N1 :: N2 :: HNil
+    type ShapeHL = N1 :: N2 :: HNil
   }
 
   implicit def shape1[N1 <: Nat]: Shape1[N1]                = new Shape1[N1]

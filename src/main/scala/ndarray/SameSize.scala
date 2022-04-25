@@ -12,8 +12,8 @@ trait SameSize[S1, S2]
 
 object SameSize extends SameSize[scala.Any, scala.Any] {
   implicit def sameSizeShape[S1 <: Shape, S2 <: Shape, SizeOfTo <: Nat, SizeOfFrom <: Nat](implicit
-    fold1: LeftFolder.Aux[S1#Shape, _1, sumNat.type, SizeOfTo],
-    fold2: LeftFolder.Aux[S2#Shape, _1, sumNat.type, SizeOfFrom],
+    fold1: LeftFolder.Aux[S1#ShapeHL, _1, sumNat.type, SizeOfTo],
+    fold2: LeftFolder.Aux[S2#ShapeHL, _1, sumNat.type, SizeOfFrom],
     sameShape: SizeOfFrom =:= SizeOfTo
   ): SameSize[S1, S2] = this.asInstanceOf[SameSize[S1, S2]]
 }

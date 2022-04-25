@@ -1,6 +1,6 @@
 package ndarray
 
-import ndarray.Shape.Shape2
+import breeze.linalg.DenseMatrix
 import org.scalatest.funspec.AnyFunSpec
 import shapeless.HNil
 import shapeless.Nat._
@@ -37,7 +37,28 @@ class NdArrayTest extends AnyFunSpec {
 
   describe("reshape") {
     it("should return a new array with the specified shape") {
-      NdArray.arrange(_10).reshape(Shape.of2[_2, _5])
+      assert(
+        NdArray.arrange(_10).reshape(Shape.of2[_2, _5]).values == DenseMatrix
+          .create(2, 5, Array.range(0, 10))
+      )
+      assert(
+        NdArray.arrange(_10).reshape(Shape.of2[_5, _2]).values == DenseMatrix
+          .create(5, 2, Array.range(0, 10))
+      )
+      assert(
+        NdArray
+          .arrange(_10).reshape(Shape.of2[_2, _5]).reshape(Shape.of1[_10]).values == DenseMatrix
+          .create(10, 1, Array.range(0, 10))
+      )
+    }
+
+    it("should not compile if the shape is not compatible") {
+      assertDoesNotCompile("""
+          NdArray.arrange(_10).reshape(Shape.of2[_2, _2])
+        """)
+      assertDoesNotCompile("""
+          NdArray.arrange(_10).reshape(Shape.of2[_2, _5]).reshape(Shape.of1[_9])
+        """)
     }
   }
 
