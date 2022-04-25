@@ -1,11 +1,14 @@
 package ndarray
 
 import breeze.linalg.{DenseMatrix, DenseVector}
+import breeze.storage.Zero
 import ndarray.Shape.{Shape1, Shape2, applySummonNat, sumNat}
 import shapeless.Nat._1
 import shapeless.ops.hlist.{LeftFolder, Length, LiftAll, Mapper}
 import shapeless.ops.nat.{Diff, Div, ToInt}
 import shapeless.{HList, Nat}
+
+import scala.reflect.ClassTag
 
 case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit val s: S) {
   def length: Int = values.size
@@ -45,15 +48,24 @@ object NdArray {
     implicit val ambiguous2: NonNothing[Nothing] = this
   }
 
-  class ApplyPartiallyApplied[S <: Shape] {
-    def apply[T](value: Array[T])(implicit ev: NonNothing[S], s: S): NdArray[T, S] =
-      new NdArray[T, S](DenseVector(value).asDenseMatrix)
+  class Array1PartiallyApplied[N1 <: Nat] {
+    def apply[T](value: Array[T])(implicit s: Shape1[N1]): NdArray[T, Shape1[N1]] =
+      new NdArray(DenseVector(value).asDenseMatrix)
   }
 
-  def array[S <: Shape] = new ApplyPartiallyApplied[S]
+  class Array2PartiallyApplied[N1 <: Nat, N2 <: Nat] {
+    def apply[T, O1 <: Nat, O2 <: Nat](value: Array[Array[T]])(implicit
+      s: Shape2[N1, N2],
+      toInt1: ToInt[N1],
+      toInt2: ToInt[N2],
+      zero: Zero[T],
+      tag: ClassTag[T]
+    ): NdArray[T, Shape2[N1, N2]] =
+      new NdArray(DenseMatrix.create(toInt1(), toInt2(), value.flatten))(s)
+  }
 
-  def array1[N1 <: Nat]: ApplyPartiallyApplied[Shape1[N1]]                = array[Shape1[N1]]
-  def array2[N1 <: Nat, N2 <: Nat]: ApplyPartiallyApplied[Shape2[N1, N2]] = array[Shape2[N1, N2]]
+  def array1[N1 <: Nat]: Array1PartiallyApplied[N1] = new Array1PartiallyApplied[N1]
+  def array2[N1 <: Nat, N2 <: Nat]                  = new Array2PartiallyApplied[N1, N2]
 
   def arrange[N <: Nat](n: N)(implicit toInt: ToInt[n.N], s: Shape1[N]): NdArray[Int, Shape1[N]] =
     array1[N](Array.range(0, Nat.toInt(n)))

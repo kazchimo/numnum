@@ -137,7 +137,11 @@ class NdArrayTest extends AnyFunSpec {
   describe("companion") {
     describe("array") {
       it("should create a new NdArray") {
-        NdArray.array1[_3](Array(1, 2, 3))
+        val arr1 = NdArray.array1[_3](Array(1, 2, 3)).values
+        assert(arr1.cols == 3 && arr1.rows == 1)
+
+        val arr2 = NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).values
+        assert(arr2.cols == 3 && arr2.rows == 2)
       }
 
       it("should not compile without Shape type parameter") {
