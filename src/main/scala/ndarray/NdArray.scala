@@ -45,14 +45,6 @@ case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit
 }
 
 object NdArray {
-  trait NonNothing[T]
-
-  object NonNothing extends NonNothing[Nothing] {
-    implicit def nonNothing[T]: NonNothing[T] = new NonNothing[T] {}
-
-    implicit val ambiguous1: NonNothing[Nothing] = this
-    implicit val ambiguous2: NonNothing[Nothing] = this
-  }
 
   class Array1PartiallyApplied[N1 <: Nat] {
     def apply[T](
