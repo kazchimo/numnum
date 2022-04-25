@@ -26,6 +26,7 @@ case class NdArray[T, S <: Shape] private (values: Array[T])(implicit val s: S) 
     summon: SummonNat[Result]
   ): Result = s.size
 
+  def reshape[ToShape <: Shape](shape: ToShape)(implicit sameSize: SameSize[S, ToShape]) = ???
 }
 
 object NdArray {

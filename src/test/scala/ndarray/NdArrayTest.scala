@@ -1,5 +1,6 @@
 package ndarray
 
+import ndarray.Shape.Shape2
 import org.scalatest.funspec.AnyFunSpec
 import shapeless.HNil
 import shapeless.Nat._
@@ -31,6 +32,12 @@ class NdArrayTest extends AnyFunSpec {
       assert(
         NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).shape == _2 :: _3 :: HNil
       )
+    }
+  }
+
+  describe("reshape") {
+    it("should return a new array with the specified shape") {
+      NdArray.arrange(_10).reshape(Shape.of2[_2, _5])
     }
   }
 
