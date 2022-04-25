@@ -1,13 +1,16 @@
 package ndarray
 
+import breeze.linalg.{DenseMatrix, DenseVector}
 import ndarray.Shape.{Shape1, Shape2, applySummonNat, sumNat}
 import shapeless.Nat._1
 import shapeless.ops.hlist.{LeftFolder, Length, LiftAll, Mapper}
 import shapeless.ops.nat.{Diff, Div, ToInt}
 import shapeless.{HList, Nat}
 
-case class NdArray[T, S <: Shape] private (values: Array[T])(implicit val s: S) {
-  def length: Int = values.length
+case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit val s: S) {
+  def length: Int = values.size
+
+  def toArray: Array[T] = values.toArray
 
   def ndim[Len <: Nat](implicit len: Length.Aux[s.Shape, Len], summonNat: SummonNat[Len]): Len =
     s.ndim
@@ -17,9 +20,9 @@ case class NdArray[T, S <: Shape] private (values: Array[T])(implicit val s: S) 
     mapper: Mapper.Aux[applySummonNat.type, Instances, s.Shape]
   ): s.Shape = s.shape
 
-  def all(implicit all: All[Array[T]]): Boolean = all.all(values)
+  def all(implicit all: All[DenseMatrix[T]]): Boolean = all.all(values)
 
-  def any(implicit any: Any[Array[T]]): Boolean = any(values)
+  def any(implicit any: Any[DenseMatrix[T]]): Boolean = any(values)
 
   def size[Instances <: HList, Result <: Nat](implicit
     fold: LeftFolder.Aux[s.Shape, _1, sumNat.type, Result],
@@ -41,7 +44,7 @@ object NdArray {
 
   class ApplyPartiallyApplied[S <: Shape] {
     def apply[T](value: Array[T])(implicit ev: NonNothing[S], s: S): NdArray[T, S] =
-      new NdArray[T, S](value)
+      new NdArray[T, S](DenseVector(value).asDenseMatrix)
   }
 
   def array[S <: Shape] = new ApplyPartiallyApplied[S]

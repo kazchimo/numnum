@@ -98,16 +98,16 @@ class NdArrayTest extends AnyFunSpec {
   describe("arrange") {
     it("should return an array of the specified shape with the specified values") {
       val arr1 = NdArray.arrange(_3)
-      assert(arr1.values.sameElements(Array(0, 1, 2)))
+      assert(arr1.toArray.sameElements(Array(0, 1, 2)))
       assert(arr1.shape == _3 :: HNil)
 
       val arr2 = NdArray.arrange(_2, _5)
-      assert(arr2.values.sameElements(Array(2, 3, 4)))
+      assert(arr2.toArray.sameElements(Array(2, 3, 4)))
       assert(arr2.shape == _3 :: HNil)
       assertDoesNotCompile("NdArray.arrange(_5, _2)")
 
       val arr3 = NdArray.arrange(_3, _10, _2)
-      assert(arr3.values.sameElements(Array(3, 5, 7, 9)))
+      assert(arr3.toArray.sameElements(Array(3, 5, 7, 9)))
       assert(arr3.shape == _4 :: HNil)
       assertDoesNotCompile("NdArray.arrange(_10, _3, _2)")
     }
