@@ -33,6 +33,9 @@ trait Shape {
 }
 
 object Shape {
+  def of1[N1 <: Nat]: Shape1[N1]                = Shape1[N1]()
+  def of2[N1 <: Nat, N2 <: Nat]: Shape2[N1, N2] = Shape2[N1, N2]()
+
   object applySummonNat extends Poly1 {
     implicit def caseHasSummonNat[N <: Nat]: Case.Aux[SummonNat[N], N] = at(_.value)
   }
@@ -44,11 +47,11 @@ object Shape {
     ): Case.Aux[N1, N2, N3] = at((_, _) => SummonNat[N3].value)
   }
 
-  class Shape1[N1 <: Nat] extends Shape {
+  case class Shape1[N1 <: Nat]() extends Shape {
     type Shape = N1 :: HNil
   }
 
-  class Shape2[N1 <: Nat, N2 <: Nat] extends Shape {
+  case class Shape2[N1 <: Nat, N2 <: Nat]() extends Shape {
     type Shape = N1 :: N2 :: HNil
   }
 
