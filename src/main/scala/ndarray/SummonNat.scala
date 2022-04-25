@@ -15,6 +15,8 @@ trait SummonNat[N] {
 }
 
 object SummonNat {
+  type Aux[N, O <: Nat] = SummonNat[N] { type Out = O }
+
   def apply[N <: Nat](implicit sn: SummonNat[N]): SummonNat[N] = sn
 
   implicit def summonNat[N <: Nat]: SummonNat[N] = macro NatMacros.materialize[N]

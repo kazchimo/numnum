@@ -1,13 +1,17 @@
 package ndarray
 
-import shapeless.ops.hlist.{IsHCons, Length}
+import ndarray.Shape.applySummonNat
+import shapeless.ops.hlist.{IsHCons, Length, LiftAll, Mapper}
 import shapeless.ops.nat.ToInt
-import shapeless.{::, HList, HNil, Nat}
+import shapeless.{::, HList, HNil, Nat, Poly1}
 
 trait Shape {
   type S <: HList
 
-  def shape: S
+  def shape[Instances <: HList](implicit
+    liftAll: LiftAll.Aux[SummonNat, S, Instances],
+    mapper: Mapper.Aux[applySummonNat.type, Instances, S]
+  ): S = liftAll.instances.map(applySummonNat)
 
   def ndim[Len <: Nat](implicit len: Length.Aux[S, Len], toInt: ToInt[Len]): Int = toInt()
 
@@ -24,16 +28,16 @@ trait Shape {
 }
 
 object Shape {
+  object applySummonNat extends Poly1 {
+    implicit def caseHasSummonNat[N <: Nat]: Case.Aux[SummonNat[N], N] = at[SummonNat[N]](_.value)
+  }
+
   class Shape1[N1 <: Nat: SummonNat: ToInt] extends Shape {
     type S = N1 :: HNil
-
-    def shape: S = SummonNat[N1].value :: HNil
   }
 
   class Shape2[N1 <: Nat: SummonNat: ToInt, N2 <: Nat: SummonNat: ToInt] extends Shape {
     type S = N1 :: N2 :: HNil
-
-    def shape: S = SummonNat[N1].value :: SummonNat[N2].value :: HNil
   }
 
   implicit def shape1[N1 <: Nat: SummonNat: ToInt]: Shape1[N1]                                  = new Shape1[N1]

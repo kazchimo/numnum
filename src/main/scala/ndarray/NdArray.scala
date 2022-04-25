@@ -1,16 +1,19 @@
 package ndarray
 
-import ndarray.Shape.{Shape1, Shape2}
-import shapeless.Nat
-import shapeless.ops.hlist.Length
+import ndarray.Shape.{Shape1, Shape2, applySummonNat}
+import shapeless.{HList, Nat}
+import shapeless.ops.hlist.{Length, LiftAll, Mapper}
 import shapeless.ops.nat.{Diff, Div, ToInt}
 
-case class NdArray[T, S <: Shape] private (values: Array[T])(implicit s: S) {
+case class NdArray[T, S <: Shape] private (values: Array[T])(implicit val s: S) {
   def size: Int = values.length
 
   def ndim[Len <: Nat](implicit len: Length.Aux[s.S, Len], toInt: ToInt[Len]): Int = s.ndim
 
-  def shape(implicit shape: S): shape.S = shape.shape
+  def shape[Instances <: HList](implicit
+    liftAll: LiftAll.Aux[SummonNat, s.S, Instances],
+    mapper: Mapper.Aux[applySummonNat.type, Instances, s.S]
+  ): s.S = s.shape
 
   def all(implicit all: All[Array[T]]): Boolean = all.all(values)
 
