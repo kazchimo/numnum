@@ -1,6 +1,7 @@
 package ndarray
 
 import breeze.linalg.DenseMatrix
+import ndarray.Shape.Shape1
 import org.scalatest.funspec.AnyFunSpec
 import shapeless.HNil
 import shapeless.Nat._
@@ -47,8 +48,10 @@ class NdArrayTest extends AnyFunSpec {
       )
       assert(
         NdArray
-          .arrange(_10).reshape(Shape.of2[_2, _5]).reshape(Shape.of1[_10]).values == DenseMatrix
-          .create(10, 1, Array.range(0, 10))
+          .arrange(_10)
+          .reshape(Shape.of2[_2, _5])
+          .reshape(Shape.of1[_10])
+          .values == DenseMatrix.create(1, 10, Array.range(0, 10))
       )
     }
 
@@ -135,6 +138,18 @@ class NdArrayTest extends AnyFunSpec {
   }
 
   describe("companion") {
+    describe("constructor") {
+      it("should throw if invalid shape") {
+        assertThrows[IllegalArgumentException](
+          NdArray[Int, Shape1[_2]](DenseMatrix.create(2, 1, Array(1, 2)))
+        )
+        assertThrows[IllegalArgumentException](NdArray.array1[_3](Array(1, 2)))
+        assertThrows[IndexOutOfBoundsException](
+          NdArray.array2[_2, _3](Array(Array(1, 2), Array(3, 4)))
+        )
+      }
+    }
+
     describe("array") {
       it("should create a new NdArray") {
         val arr1 = NdArray.array1[_3](Array(1, 2, 3)).values

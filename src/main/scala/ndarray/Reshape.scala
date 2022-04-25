@@ -11,8 +11,8 @@ trait Reshape[S] {
 
 object Reshape {
   implicit def shape1Reshape[N <: Nat: ToInt]: Reshape[Shape1[N]] = new Reshape[Shape1[N]] {
-    def column: Int = 1
-    def row: Int    = ToInt[N].apply()
+    def column: Int = ToInt[N].apply()
+    def row: Int    = 1
   }
 
   implicit def shape2Reshape[N1 <: Nat: ToInt, N2 <: Nat: ToInt]: Reshape[Shape2[N1, N2]] =
