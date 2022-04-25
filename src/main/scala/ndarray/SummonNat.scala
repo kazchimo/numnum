@@ -6,10 +6,12 @@ import shapeless.ops.nat.ToInt
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 
-trait SummonNat[N <: Nat] {
+trait SummonNat[N] {
+  type Out <: Nat with N
+
   val value: N
 
-  def toInt(implicit toInt: ToInt[N]): Int = toInt()
+  def toInt(implicit toInt: ToInt[Out]): Int = toInt()
 }
 
 object SummonNat {
