@@ -2,7 +2,7 @@ package ndarray
 
 import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.storage.Zero
-import ndarray.Shape.{Shape1, Shape2, applySummonNat, sumNat}
+import ndarray.Shape.{AmbiguousShape, Shape1, Shape2, applySummonNat, sumNat}
 import shapeless.Nat._1
 import shapeless.ops.hlist.{LeftFolder, Length, LiftAll, Mapper}
 import shapeless.ops.nat.{Diff, Div, ToInt}
@@ -20,8 +20,7 @@ case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit
 
   def toArray: Array[T] = values.toArray
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[s.ShapeHL, Len], summonNat: SummonNat[Len]): Len =
-    s.ndim
+  def ndim[Len <: Nat](implicit ndim: Ndim.Aux[s.ShapeHL, Len]): Len = s.ndim
 
   def shape[Instances <: HList](implicit
     liftAll: LiftAll.Aux[SummonNat, s.ShapeHL, Instances],
@@ -45,6 +44,8 @@ case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit
 }
 
 object NdArray {
+  def ambiguous[T](values: Array[T]): NdArray[T, AmbiguousShape] =
+    NdArray[T, AmbiguousShape](DenseVector(values).asDenseMatrix)
 
   class Array1PartiallyApplied[N1 <: Nat] {
     def apply[T](
@@ -95,4 +96,9 @@ object NdArray {
     vs: ValidShape[Shape1[Succ[Size]]]
   ): NdArray[Int, Shape1[Succ[Size]]] =
     array1(Array.range(Nat.toInt[Start], Nat.toInt[End], Nat.toInt[Interval]))
+
+  class FullPartiallyApplied[S <: Shape] {
+    def apply[T](value: T) = ???
+  }
+  def full[T](t: T) = ???
 }

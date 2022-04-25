@@ -1,7 +1,7 @@
 package ndarray
 
 import breeze.linalg.DenseMatrix
-import ndarray.Shape.{Shape1, Shape2}
+import ndarray.Shape.{AmbiguousShape, Shape1, Shape2}
 import shapeless.Nat
 import shapeless.ops.nat.ToInt
 
@@ -19,4 +19,8 @@ object ValidShape {
       def apply[T](d: DenseMatrix[T]): Boolean =
         d.rows == ToInt[N1].apply && d.cols == ToInt[N2].apply
     }
+
+  implicit def ambiguousValid: ValidShape[AmbiguousShape] = new ValidShape[AmbiguousShape] {
+    def apply[T](d: DenseMatrix[T]): Boolean = true
+  }
 }

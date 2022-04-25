@@ -25,6 +25,10 @@ class NdArrayTest extends AnyFunSpec {
       assert(NdArray.array1[_3](Array(1, 2, 3)).ndim == _1)
       assert(NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).ndim == _2)
     }
+
+    it("should not be defined for ambiguous arrays") {
+      assertDoesNotCompile("NdArray.ambiguous(Array(1, 2, 3)).ndim")
+    }
   }
 
   describe("shape") {

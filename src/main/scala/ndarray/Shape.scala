@@ -14,8 +14,7 @@ trait Shape {
     mapper: Mapper.Aux[applySummonNat.type, Instances, ShapeHL]
   ): ShapeHL = liftAll.instances.map(applySummonNat)
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[ShapeHL, Len], summon: SummonNat[Len]): Len =
-    summon.value
+  def ndim[Len <: Nat](implicit ndim: Ndim.Aux[ShapeHL, Len]): Len = ndim()
 
   def headSize[Head <: Nat](implicit headSize: HeadSize.Aux[ShapeHL, Head]): Int = headSize.int
 
@@ -54,6 +53,13 @@ object Shape {
     type ShapeHL = N1 :: N2 :: HNil
   }
 
+  case object AmbiguousShape extends Shape {
+    type ShapeHL = HNil
+  }
+
+  type AmbiguousShape = AmbiguousShape.type
+
   implicit def shape1[N1 <: Nat]: Shape1[N1]                = new Shape1[N1]
   implicit def shape2[N1 <: Nat, N2 <: Nat]: Shape2[N1, N2] = new Shape2[N1, N2]
+  implicit def ambiguousShape: AmbiguousShape               = AmbiguousShape
 }
