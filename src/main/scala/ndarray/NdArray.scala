@@ -9,7 +9,8 @@ import shapeless.{HList, Nat}
 case class NdArray[T, S <: Shape] private (values: Array[T])(implicit val s: S) {
   def length: Int = values.length
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[s.Shape, Len], toInt: ToInt[Len]): Int = s.ndim
+  def ndim[Len <: Nat](implicit len: Length.Aux[s.Shape, Len], summonNat: SummonNat[Len]): Len =
+    s.ndim
 
   def shape[Instances <: HList](implicit
     liftAll: LiftAll.Aux[SummonNat, s.Shape, Instances],

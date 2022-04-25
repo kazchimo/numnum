@@ -14,15 +14,17 @@ trait Shape {
     mapper: Mapper.Aux[applySummonNat.type, Instances, Shape]
   ): Shape = liftAll.instances.map(applySummonNat)
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[Shape, Len], toInt: ToInt[Len]): Int = toInt()
+  def ndim[Len <: Nat](implicit len: Length.Aux[Shape, Len], summon: SummonNat[Len]): Len =
+    summon.value
 
   def headSize[Head <: Nat, Tail <: HList](implicit
     isH: IsHCons.Aux[Shape, Head, Tail],
     toInt: ToInt[Head]
   ): Int = toInt()
 
-  def isShape1[Len <: Nat](implicit len: Length.Aux[Shape, Len], toInt: ToInt[Len]): Boolean =
-    ndim == 1
+  def isShapeOf[N <: Nat, Len <: Nat](
+    n: N
+  )(implicit len: Length.Aux[Shape, Len], summon: SummonNat[Len]): Boolean = ndim == n
 
   def size[Instances <: HList, Result <: Nat](implicit
     fold: LeftFolder.Aux[Shape, _1, sumNat.type, Result],

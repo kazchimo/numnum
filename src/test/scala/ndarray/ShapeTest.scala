@@ -14,8 +14,8 @@ class ShapeTest extends AnyFunSpec {
 
   describe("isShape1") {
     it("should return true if S is Shape1") {
-      assert(new Shape1[_3].isShape1)
-      assert(!new Shape2[_3, _5].isShape1)
+      assert(new Shape1[_3].isShapeOf(_1))
+      assert(new Shape2[_3, _5].isShapeOf(_2))
     }
   }
 
