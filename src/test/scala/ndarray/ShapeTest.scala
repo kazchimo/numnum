@@ -18,4 +18,11 @@ class ShapeTest extends AnyFunSpec {
       assert(!new Shape2[_3, _5].isShape1)
     }
   }
+
+  describe("size") {
+    it("should return the number of elements of S") {
+      assert(new Shape1[_3].size.toInt == 3)
+      assert(new Shape2[_3, _5].size.toInt == 15)
+    }
+  }
 }

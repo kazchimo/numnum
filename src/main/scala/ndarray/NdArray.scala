@@ -1,23 +1,30 @@
 package ndarray
 
-import ndarray.Shape.{Shape1, Shape2, applySummonNat}
-import shapeless.{HList, Nat}
-import shapeless.ops.hlist.{Length, LiftAll, Mapper}
+import ndarray.Shape.{Shape1, Shape2, applySummonNat, sumNat}
+import shapeless.Nat._1
+import shapeless.ops.hlist.{LeftFolder, Length, LiftAll, Mapper}
 import shapeless.ops.nat.{Diff, Div, ToInt}
+import shapeless.{HList, Nat}
 
 case class NdArray[T, S <: Shape] private (values: Array[T])(implicit val s: S) {
-  def size: Int = values.length
+  def length: Int = values.length
 
-  def ndim[Len <: Nat](implicit len: Length.Aux[s.S, Len], toInt: ToInt[Len]): Int = s.ndim
+  def ndim[Len <: Nat](implicit len: Length.Aux[s.Shape, Len], toInt: ToInt[Len]): Int = s.ndim
 
   def shape[Instances <: HList](implicit
-    liftAll: LiftAll.Aux[SummonNat, s.S, Instances],
-    mapper: Mapper.Aux[applySummonNat.type, Instances, s.S]
-  ): s.S = s.shape
+    liftAll: LiftAll.Aux[SummonNat, s.Shape, Instances],
+    mapper: Mapper.Aux[applySummonNat.type, Instances, s.Shape]
+  ): s.Shape = s.shape
 
   def all(implicit all: All[Array[T]]): Boolean = all.all(values)
 
   def any(implicit any: Any[Array[T]]): Boolean = any(values)
+
+  def size[Instances <: HList, Result <: Nat](implicit
+    fold: LeftFolder.Aux[s.Shape, _1, sumNat.type, Result],
+    summon: SummonNat[Result]
+  ): Result = s.size
+
 }
 
 object NdArray {

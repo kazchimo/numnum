@@ -5,9 +5,16 @@ import shapeless.HNil
 import shapeless.Nat._
 
 class NdArrayTest extends AnyFunSpec {
+  describe("length") {
+    it("should return the number of elements in the array") {
+      assert(NdArray.array1[_3](Array(1, 2, 3)).length == 3)
+    }
+  }
+
   describe("size") {
     it("should return the number of elements in the array") {
-      assert(NdArray.array1[_3](Array(1, 2, 3)).size == 3)
+      assert(NdArray.array1[_3](Array(1, 2, 3)).size.toInt == 3)
+      assert(NdArray.array2[_3, _2](Array(Array(1, 2, 3), Array(4, 5, 6))).size.toInt == 6)
     }
   }
 
