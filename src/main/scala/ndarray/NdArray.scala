@@ -84,7 +84,7 @@ object NdArray {
   ): NdArray[Int, Shape1[arrange.Out]] = arrange.apply
 
   class FullPartiallyApplied[S <: Shape] {
-    def apply[T: Zero: ClassTag](t: T)(implicit full: Full[S]): NdArray[T, S] = full(t)
+    def apply[T](t: T)(implicit full: Full.Aux[S, T]): NdArray[T, S] = full(t)
   }
 
   def full[S <: Shape] = new FullPartiallyApplied[S]

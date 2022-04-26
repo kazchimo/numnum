@@ -9,21 +9,27 @@ import shapeless.ops.nat.ToInt
 import scala.reflect.ClassTag
 
 trait Full[S <: Shape] {
-  def apply[T: Zero: ClassTag](t: T): NdArray[T, S]
+  type T
+
+  def apply(t: T): NdArray[T, S]
 }
 
 object Full {
-  def apply[S <: Shape](implicit ev: Full[S]): Full[S] = ev
+  type Aux[S <: Shape, T0] = Full[S] { type T = T0 }
 
-  implicit def shape1[N1 <: Nat: ToInt]: Full[Shape1[N1]] = new Full[Shape1[N1]] {
-    def apply[T: Zero: ClassTag](t: T): NdArray[T, Shape1[N1]] =
-      NdArray(DenseMatrix.fill(1, ToInt[N1].apply)(t))
-  }
+  implicit def shape1[N1 <: Nat: ToInt, T0: Zero: ClassTag]: Aux[Shape1[N1], T0] =
+    new Full[Shape1[N1]] {
+      type T = T0
 
-  implicit def shape2[N1 <: Nat: ToInt, N2 <: Nat: ToInt]: Full[Shape2[N1, N2]] =
-    new Full[Shape2[N1, N2]] {
-      def apply[T: Zero: ClassTag](t: T): NdArray[T, Shape2[N1, N2]] =
-        NdArray(DenseMatrix.fill(ToInt[N1].apply, ToInt[N2].apply)(t))
+      def apply(t: T): NdArray[T, Shape1[N1]] = NdArray(DenseMatrix.fill(1, ToInt[N1].apply)(t))
     }
+
+  implicit def shape2[N1 <: Nat: ToInt, N2 <: Nat: ToInt, T0: Zero: ClassTag]
+    : Aux[Shape2[N1, N2], T0] = new Full[Shape2[N1, N2]] {
+    type T = T0
+
+    def apply(t: T): NdArray[T, Shape2[N1, N2]] =
+      NdArray(DenseMatrix.fill(ToInt[N1].apply, ToInt[N2].apply)(t))
+  }
 
 }
