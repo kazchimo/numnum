@@ -83,7 +83,7 @@ object NdArray {
     start: Start,
     end: End,
     step: Step
-  )(implicit arrange: Arrange3[Start, End, Step, Out]): NdArray[Int, Shape1[Out]] =
+  )(implicit arrange: Arrange3[Start, End, Step]): NdArray[Int, Shape1[arrange.Out]] =
     arrange(start, end, step)
 
   class FullPartiallyApplied[S <: Shape] {

@@ -34,11 +34,16 @@ object Arrange2 {
   }
 }
 
-abstract class Arrange3[Start <: Nat, End <: Nat, Step <: Nat, Out <: Nat] {
+abstract class Arrange3[Start <: Nat, End <: Nat, Step <: Nat] {
+  type Out <: Nat
+
   def apply(start: Start, end: End, step: Step): NdArray[Int, Shape1[Out]]
 }
 
 object Arrange3 {
+  type Aux[Start <: Nat, End <: Nat, Step <: Nat, Out0 <: Nat] =
+    Arrange3[Start, End, Step] { type Out = Out0 }
+
   implicit def arrange3[Start <: Nat, End <: Nat, Step <: Nat, Len <: Nat, Size <: Nat](implicit
     sToInt: ToInt[Start],
     eToInt: ToInt[End],
@@ -47,9 +52,10 @@ object Arrange3 {
     div: Div.Aux[Len, Step, Size],
     s: Shape1[Succ[Size]],
     vs: ValidShape[Shape1[Succ[Size]]]
-  ): Arrange3[Start, End, Step, Succ[Size]] = new Arrange3[Start, End, Step, Succ[Size]] {
-    def apply(start: Start, end: End, step: Step): NdArray[Int, Shape1[Succ[Size]]] =
-      array1(Array.range(Nat.toInt[Start], Nat.toInt[End], Nat.toInt[Step]))
+  ): Aux[Start, End, Step, Succ[Size]] = new Arrange3[Start, End, Step] {
+    type Out = Succ[Size]
 
+    def apply(start: Start, end: End, step: Step): NdArray[Int, Shape1[Out]] =
+      array1(Array.range(Nat.toInt[Start], Nat.toInt[End], Nat.toInt[Step]))
   }
 }
