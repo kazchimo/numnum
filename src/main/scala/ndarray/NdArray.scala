@@ -75,9 +75,9 @@ object NdArray {
 
   def arrange[N <: Nat: Arrange1](n: N): NdArray[Int, Shape1[N]] = Arrange1[N].apply(n)
 
-  def arrange[Start <: Nat, End <: Nat, Len <: Nat](start: Start, end: End)(implicit
-    arrange: Arrange2[Start, End, Len]
-  ): NdArray[Int, Shape1[Len]] = arrange(start, end)
+  def arrange[Start <: Nat, End <: Nat](start: Start, end: End)(implicit
+    arrange: Arrange2[Start, End]
+  ): NdArray[Int, Shape1[arrange.Out]] = arrange(start, end)
 
   def arrange[Start <: Nat, End <: Nat, Step <: Nat, Out <: Nat](
     start: Start,

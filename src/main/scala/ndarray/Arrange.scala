@@ -17,19 +17,25 @@ object Arrange1 {
   }
 }
 
-abstract class Arrange2[Start <: Nat, End <: Nat, Len <: Nat] {
-  def apply(start: Start, end: End): NdArray[Int, Shape1[Len]]
+abstract class Arrange2[Start <: Nat, End <: Nat] {
+  type Out <: Nat
+
+  def apply(start: Start, end: End): NdArray[Int, Shape1[Out]]
 }
 
 object Arrange2 {
+  type Aux[Start <: Nat, End <: Nat, Out0 <: Nat] = Arrange2[Start, End] { type Out = Out0 }
+
   implicit def arrange2[Start <: Nat, End <: Nat, Len <: Nat](implicit
     sToInt: ToInt[Start],
     eToInt: ToInt[End],
     diff: Diff.Aux[End, Start, Len],
     s: Shape1[Len],
     vs: ValidShape[Shape1[Len]]
-  ): Arrange2[Start, End, Len] = new Arrange2[Start, End, Len] {
-    def apply(start: Start, end: End): NdArray[Int, Shape1[Len]] =
+  ): Aux[Start, End, Len] = new Arrange2[Start, End] {
+    type Out = Len
+
+    def apply(start: Start, end: End): NdArray[Int, Shape1[Out]] =
       array1[Len](Array.range(Nat.toInt[Start], Nat.toInt[End]))
   }
 }
