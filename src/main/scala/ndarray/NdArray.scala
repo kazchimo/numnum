@@ -73,15 +73,15 @@ object NdArray {
   def array1[N1 <: Nat]: Array1PartiallyApplied[N1] = new Array1PartiallyApplied[N1]
   def array2[N1 <: Nat, N2 <: Nat]                  = new Array2PartiallyApplied[N1, N2]
 
-  def arrange[N <: Nat: Arrange1](n: N): NdArray[Int, Shape1[N]] = Arrange1[N].apply(n)
+  def arrange[N <: Nat: Arrange1]: NdArray[Int, Shape1[N]] = Arrange1[N].apply
 
-  def arrange[Start <: Nat, End <: Nat](start: Start, end: End)(implicit
+  def arrange[Start <: Nat, End <: Nat](implicit
     arrange: Arrange2[Start, End]
-  ): NdArray[Int, Shape1[arrange.Out]] = arrange(start, end)
+  ): NdArray[Int, Shape1[arrange.Out]] = arrange.apply
 
-  def arrange[Start <: Nat, End <: Nat, Step <: Nat](start: Start, end: End, step: Step)(implicit
+  def arrange[Start <: Nat, End <: Nat, Step <: Nat](implicit
     arrange: Arrange3[Start, End, Step]
-  ): NdArray[Int, Shape1[arrange.Out]] = arrange(start, end, step)
+  ): NdArray[Int, Shape1[arrange.Out]] = arrange.apply
 
   class FullPartiallyApplied[S <: Shape] {
     def apply[T: Zero: ClassTag](t: T)(implicit full: Full[S]): NdArray[T, S] = full(t)

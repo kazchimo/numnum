@@ -43,16 +43,16 @@ class NdArrayTest extends AnyFunSpec {
   describe("reshape") {
     it("should return a new array with the specified shape") {
       assert(
-        NdArray.arrange(_10).reshape(Shape.of2[_2, _5]).values == DenseMatrix
+        NdArray.arrange[_10].reshape(Shape.of2[_2, _5]).values == DenseMatrix
           .create(2, 5, Array.range(0, 10))
       )
       assert(
-        NdArray.arrange(_10).reshape(Shape.of2[_5, _2]).values == DenseMatrix
+        NdArray.arrange[_10].reshape(Shape.of2[_5, _2]).values == DenseMatrix
           .create(5, 2, Array.range(0, 10))
       )
       assert(
         NdArray
-          .arrange(_10)
+          .arrange[_10]
           .reshape(Shape.of2[_2, _5])
           .reshape(Shape.of1[_10])
           .values == DenseMatrix.create(1, 10, Array.range(0, 10))
@@ -125,16 +125,16 @@ class NdArrayTest extends AnyFunSpec {
 
   describe("arrange") {
     it("should return an array of the specified shape with the specified values") {
-      val arr1 = NdArray.arrange(_3)
+      val arr1 = NdArray.arrange[_3]
       assert(arr1.toArray.sameElements(Array(0, 1, 2)))
       assert(arr1.shape == _3 :: HNil)
 
-      val arr2 = NdArray.arrange(_2, _5)
+      val arr2 = NdArray.arrange[_2, _5]
       assert(arr2.toArray.sameElements(Array(2, 3, 4)))
       assert(arr2.shape == _3 :: HNil)
       assertDoesNotCompile("NdArray.arrange(_5, _2)")
 
-      val arr3 = NdArray.arrange(_3, _10, _2)
+      val arr3 = NdArray.arrange[_3, _10, _2]
       assert(arr3.toArray.sameElements(Array(3, 5, 7, 9)))
       assert(arr3.shape == _4 :: HNil)
       assertDoesNotCompile("NdArray.arrange(_10, _3, _2)")
