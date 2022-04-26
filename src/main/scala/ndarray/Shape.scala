@@ -1,8 +1,7 @@
 package ndarray
 
-import ndarray.Shape.{applySummonNat, sumNat}
-import shapeless.Nat._1
-import shapeless.ops.hlist.{LeftFolder, Length, LiftAll, Mapper}
+import ndarray.Shape.applySummonNat
+import shapeless.ops.hlist.{Length, LiftAll, Mapper}
 import shapeless.ops.nat.Prod
 import shapeless.{::, HList, HNil, Nat, Poly1, Poly2}
 
@@ -24,10 +23,7 @@ trait Shape {
     n: N
   )(implicit len: Length.Aux[ShapeHL, Len], summon: SummonNat[Len]): Boolean = ndim == n
 
-  def size[Instances <: HList, Result <: Nat](implicit
-    fold: LeftFolder.Aux[ShapeHL, _1, sumNat.type, Result],
-    summon: SummonNat[Result]
-  ): Result = summon.value
+  def size(implicit size: Size[ShapeHL]): size.Out = size.apply
 }
 
 object Shape {

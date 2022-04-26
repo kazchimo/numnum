@@ -34,10 +34,7 @@ case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
 
   def any(implicit any: Any[DenseMatrix[T]]): Boolean = any(values)
 
-  def size[Instances <: HList, Result <: Nat](implicit
-    fold: LeftFolder.Aux[s.ShapeHL, _1, sumNat.type, Result],
-    summon: SummonNat[Result]
-  ): Result = s.size
+  def size[O <: Nat](implicit size: Size.Aux[s.ShapeHL, O]): O = s.size
 
   def reshape[ToShape <: Shape, Head <: Nat](shape: ToShape)(implicit
     sameSize: SameSize[S, ToShape],
