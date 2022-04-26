@@ -1,17 +1,16 @@
 package ndarray
 
 import shapeless.Nat
-import shapeless.ops.nat.ToInt
 
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 
 trait SummonNat[N] {
-  type Out <: Nat with N
+  type Out
 
   val value: N
 
-  def toInt(implicit toInt: ToInt[Out]): Int = toInt()
+  def toInt: Int
 }
 
 object SummonNat {
@@ -39,7 +38,9 @@ class NatMacros(val c: whitebox.Context) {
 
     q"""
       new SummonNat[$tpe] {
-        val value = new $natRepr
+        val value: $natRepr = new $natRepr
+        
+        def toInt: Int = value.toInt
       }
       """
   }
