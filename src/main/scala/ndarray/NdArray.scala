@@ -5,8 +5,8 @@ import breeze.storage.Zero
 import ndarray.Shape.{Shape1, Shape2, applySummonNat, sumNat}
 import shapeless.Nat._1
 import shapeless.ops.hlist.{LeftFolder, LiftAll, Mapper}
-import shapeless.ops.nat.{Diff, Div, ToInt}
-import shapeless.{HList, Nat, Succ}
+import shapeless.ops.nat.ToInt
+import shapeless.{HList, Nat}
 
 import scala.reflect.ClassTag
 
@@ -73,33 +73,18 @@ object NdArray {
   def array1[N1 <: Nat]: Array1PartiallyApplied[N1] = new Array1PartiallyApplied[N1]
   def array2[N1 <: Nat, N2 <: Nat]                  = new Array2PartiallyApplied[N1, N2]
 
-  def arrange[N <: Nat](
-    n: N
-  )(implicit toInt: ToInt[n.N], s: Shape1[N], vs: ValidShape[Shape1[N]]): NdArray[Int, Shape1[N]] =
-    array1[N](Array.range(0, Nat.toInt(n)))
+  def arrange[N <: Nat: Arrange1](n: N): NdArray[Int, Shape1[N]] = Arrange1[N].apply(n)
 
   def arrange[Start <: Nat, End <: Nat, Len <: Nat](start: Start, end: End)(implicit
-    sToInt: ToInt[Start],
-    eToInt: ToInt[End],
-    diff: Diff.Aux[End, Start, Len],
-    s: Shape1[Len],
-    vs: ValidShape[Shape1[Len]]
-  ): NdArray[Int, Shape1[Len]] = array1[Len](Array.range(Nat.toInt[Start], Nat.toInt[End]))
+    arrange: Arrange2[Start, End, Len]
+  ): NdArray[Int, Shape1[Len]] = arrange(start, end)
 
-  def arrange[Start <: Nat, End <: Nat, Interval <: Nat, Len <: Nat, Size <: Nat](
+  def arrange[Start <: Nat, End <: Nat, Step <: Nat, Out <: Nat](
     start: Start,
     end: End,
-    interval: Interval
-  )(implicit
-    sToInt: ToInt[Start],
-    eToInt: ToInt[End],
-    iToInt: ToInt[Interval],
-    diff: Diff.Aux[End, Start, Len],
-    div: Div.Aux[Len, Interval, Size],
-    s: Shape1[Succ[Size]],
-    vs: ValidShape[Shape1[Succ[Size]]]
-  ): NdArray[Int, Shape1[Succ[Size]]] =
-    array1(Array.range(Nat.toInt[Start], Nat.toInt[End], Nat.toInt[Interval]))
+    step: Step
+  )(implicit arrange: Arrange3[Start, End, Step, Out]): NdArray[Int, Shape1[Out]] =
+    arrange(start, end, step)
 
   class FullPartiallyApplied[S <: Shape] {
     def apply[T: Zero: ClassTag](t: T)(implicit full: Full[S]): NdArray[T, S] = full(t)

@@ -10,6 +10,9 @@ trait ValidShape[S] {
 }
 
 object ValidShape {
+  type ValidShape1[N <: Nat]             = ValidShape[Shape1[N]]
+  type ValidShape2[N1 <: Nat, N2 <: Nat] = ValidShape[Shape2[N1, N2]]
+
   implicit def shape1Valid[N1 <: Nat: ToInt]: ValidShape[Shape1[N1]] = new ValidShape[Shape1[N1]] {
     def apply[T](d: DenseMatrix[T]): Boolean = d.rows == 1 && d.cols == ToInt[N1].apply
   }
