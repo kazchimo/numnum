@@ -1,9 +1,8 @@
 package ndarray
 
 import breeze.linalg.DenseMatrix
-import ndarray.Shape.{Shape1, Shape2, applySummonNat, sumNat}
-import shapeless.Nat._1
-import shapeless.ops.hlist.{LeftFolder, LiftAll, Mapper}
+import ndarray.Shape.{Shape1, Shape2, applySummonNat}
+import shapeless.ops.hlist.{LiftAll, Mapper}
 import shapeless.{HList, Nat}
 
 case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
