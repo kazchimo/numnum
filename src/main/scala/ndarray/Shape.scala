@@ -1,17 +1,13 @@
 package ndarray
 
-import ndarray.Shape.applySummonNat
-import shapeless.ops.hlist.{Length, LiftAll, Mapper}
+import shapeless.ops.hlist.Length
 import shapeless.ops.nat.Prod
-import shapeless.{::, HList, HNil, Nat, Poly1, Poly2}
+import shapeless.{::, HList, HNil, Nat, Poly2}
 
 trait Shape {
   type ShapeHL <: HList
 
-  def shape[Instances <: HList](implicit
-    liftAll: LiftAll.Aux[SummonNat, ShapeHL, Instances],
-    mapper: Mapper.Aux[applySummonNat.type, Instances, ShapeHL]
-  ): ShapeHL = liftAll.instances.map(applySummonNat)
+  def shape(implicit genShape: GenShape[ShapeHL]): genShape.Out = genShape.apply
 
   def ndim(implicit ndim: Ndim[ShapeHL]): ndim.Out = ndim()
 
@@ -29,10 +25,6 @@ trait Shape {
 object Shape {
   def of1[N1 <: Nat]: Shape1[N1]                = Shape1[N1]()
   def of2[N1 <: Nat, N2 <: Nat]: Shape2[N1, N2] = Shape2[N1, N2]()
-
-  object applySummonNat extends Poly1 {
-    implicit def caseHasSummonNat[N <: Nat]: Case.Aux[SummonNat[N], N] = at(_.value)
-  }
 
   object sumNat extends Poly2 {
     implicit def caseNat[N1 <: Nat, N2 <: Nat, N3 <: Nat](implicit

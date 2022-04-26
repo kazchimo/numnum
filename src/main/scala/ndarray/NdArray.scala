@@ -1,9 +1,8 @@
 package ndarray
 
 import breeze.linalg.DenseMatrix
-import ndarray.Shape.{Shape1, Shape2, applySummonNat}
-import shapeless.ops.hlist.{LiftAll, Mapper}
-import shapeless.{HList, Nat}
+import ndarray.Shape.{Shape1, Shape2}
+import shapeless.Nat
 
 case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
   val s: S,
@@ -24,10 +23,7 @@ case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
 
   def ndim(implicit ndim: Ndim[s.ShapeHL]): ndim.Out = ndim()
 
-  def shape[Instances <: HList](implicit
-    liftAll: LiftAll.Aux[SummonNat, s.ShapeHL, Instances],
-    mapper: Mapper.Aux[applySummonNat.type, Instances, s.ShapeHL]
-  ): s.ShapeHL = s.shape
+  def shape(implicit genShape: GenShape[s.ShapeHL]): genShape.Out = genShape.apply
 
   def all(implicit all: All[DenseMatrix[T]]): Boolean = all.all(values)
 
