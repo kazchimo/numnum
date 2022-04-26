@@ -48,7 +48,7 @@ object ArrayConstructor2 {
     type T = T0
 
     override def apply(value: Array[Array[T]]): NdArray[T, Shape2[N1, N2]] =
-      new NdArray(DenseMatrix.create(toInt1(), toInt2(), value.flatten))
+      new NdArray(DenseMatrix.vertcat(value.map(a => DenseVector(a).asDenseMatrix): _*))
 
   }
 }

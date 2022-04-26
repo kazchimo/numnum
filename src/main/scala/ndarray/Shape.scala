@@ -34,6 +34,11 @@ object Shape {
     type ShapeHL = N1 :: HNil
   }
 
+  /* transposed Shape1 */
+  case class TShape1[N1 <: Nat]() extends Shape {
+    type ShapeHL = N1 :: HNil
+  }
+
   case class Shape2[N1 <: Nat, N2 <: Nat]() extends Shape {
     type ShapeHL = N1 :: N2 :: HNil
   }

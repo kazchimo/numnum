@@ -16,7 +16,7 @@ class NdArrayTest extends AnyFunSpec {
   describe("size") {
     it("should return the number of elements in the array") {
       assert(NdArray.array1[_3](Array(1, 2, 3)).size.toInt == 3)
-      assert(NdArray.array2[_3, _2](Array(Array(1, 2, 3), Array(4, 5, 6))).size.toInt == 6)
+      assert(NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).size.toInt == 6)
     }
   }
 
@@ -139,6 +139,15 @@ class NdArrayTest extends AnyFunSpec {
     }
   }
 
+  describe("t") {
+    it("should return the transpose of the array") {
+      assert(
+        NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).t.values == DenseMatrix
+          .create(3, 2, Array(1, 2, 3, 4, 5, 6))
+      )
+    }
+  }
+
   describe("companion") {
     describe("constructor") {
       it("should throw if invalid shape") {
@@ -146,7 +155,7 @@ class NdArrayTest extends AnyFunSpec {
           NdArray[Int, Shape1[_2]](DenseMatrix.create(2, 1, Array(1, 2)))
         )
         assertThrows[IllegalArgumentException](NdArray.array1[_3](Array(1, 2)))
-        assertThrows[IndexOutOfBoundsException](
+        assertThrows[IllegalArgumentException](
           NdArray.array2[_2, _3](Array(Array(1, 2), Array(3, 4)))
         )
       }
@@ -155,9 +164,12 @@ class NdArrayTest extends AnyFunSpec {
     describe("array") {
       it("should create a new NdArray") {
         val arr1 = NdArray.array1[_3](Array(1, 2, 3)).values
+        assert(arr1 == DenseMatrix.create(1, 3, Array(1, 2, 3)))
         assert(arr1.cols == 3 && arr1.rows == 1)
 
         val arr2 = NdArray.array2[_2, _3](Array(Array(1, 2, 3), Array(4, 5, 6))).values
+        println(arr2)
+        assert(arr2 == DenseMatrix.create(2, 3, Array(1, 4, 2, 5, 3, 6)))
         assert(arr2.cols == 3 && arr2.rows == 2)
       }
 

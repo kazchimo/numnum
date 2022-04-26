@@ -1,7 +1,7 @@
 package ndarray
 
 import breeze.linalg.DenseMatrix
-import ndarray.Shape.{Shape1, Shape2}
+import ndarray.Shape.{Shape1, Shape2, TShape1}
 import shapeless.Nat
 import shapeless.ops.nat.ToInt
 
@@ -11,6 +11,7 @@ trait ValidShape[S] {
 
 object ValidShape {
   type ValidShape1[N <: Nat]             = ValidShape[Shape1[N]]
+  type ValidTShape1[N <: Nat]            = ValidShape[TShape1[N]]
   type ValidShape2[N1 <: Nat, N2 <: Nat] = ValidShape[Shape2[N1, N2]]
 
   implicit def shape1Valid[N1 <: Nat: ToInt]: ValidShape[Shape1[N1]] = new ValidShape[Shape1[N1]] {

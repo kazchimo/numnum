@@ -1,7 +1,7 @@
 package ndarray
 
 import breeze.linalg.DenseMatrix
-import ndarray.Shape.{Shape1, Shape2}
+import ndarray.Shape.{Shape1, Shape2, TShape1}
 import shapeless.Nat
 
 case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
@@ -33,9 +33,15 @@ case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
 
   def reshape[ToShape <: Shape](implicit res: Reshape[T, S, ToShape]): NdArray[T, ToShape] =
     res.apply(values)
+
+  def t(implicit trans: Transpose[NdArray[T, S]]): trans.Out = trans.apply(this)
 }
 
 object NdArray {
+  type NdArray1[T, N <: Nat]           = NdArray[T, Shape1[N]]
+  type NdArrayT1[T, N <: Nat]          = NdArray[T, TShape1[N]]
+  type NdArray2[T, N <: Nat, M <: Nat] = NdArray[T, Shape2[N, M]]
+
   class Array1PartiallyApplied[N1 <: Nat] {
     def apply[T](value: Array[T])(implicit
       arrayConst: ArrayConstructor1.Aux[N1, T]
