@@ -53,13 +53,6 @@ object Shape {
     type ShapeHL = N1 :: N2 :: HNil
   }
 
-  case object AmbiguousShape extends Shape {
-    type ShapeHL = HNil
-  }
-
-  type AmbiguousShape = AmbiguousShape.type
-
   implicit def shape1[N1 <: Nat]: Shape1[N1]                = new Shape1[N1]
   implicit def shape2[N1 <: Nat, N2 <: Nat]: Shape2[N1, N2] = new Shape2[N1, N2]
-  implicit def ambiguousShape: AmbiguousShape               = AmbiguousShape
 }

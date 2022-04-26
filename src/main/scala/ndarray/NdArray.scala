@@ -2,9 +2,9 @@ package ndarray
 
 import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.storage.Zero
-import ndarray.Shape.{AmbiguousShape, Shape1, Shape2, applySummonNat, sumNat}
+import ndarray.Shape.{Shape1, Shape2, applySummonNat, sumNat}
 import shapeless.Nat._1
-import shapeless.ops.hlist.{LeftFolder, Length, LiftAll, Mapper}
+import shapeless.ops.hlist.{LeftFolder, LiftAll, Mapper}
 import shapeless.ops.nat.{Diff, Div, ToInt}
 import shapeless.{HList, Nat, Succ}
 
@@ -44,9 +44,6 @@ case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit
 }
 
 object NdArray {
-  def ambiguous[T](values: Array[T]): NdArray[T, AmbiguousShape] =
-    NdArray[T, AmbiguousShape](DenseVector(values).asDenseMatrix)
-
   class Array1PartiallyApplied[N1 <: Nat] {
     def apply[T](
       value: Array[T]
