@@ -76,4 +76,8 @@ object NdArray {
   def ones[S <: Shape](implicit full: Full.Aux[S, Int]) = new FullPartiallyApplied[S]()(1)
 
   def zeros[S <: Shape](implicit full: Full.Aux[S, Int]) = new FullPartiallyApplied[S]()(0)
+
+  def linspace[Start <: Nat, End <: Nat, Count <: Nat](implicit
+    linspace: Linspace[Start, End, Count]
+  ): NdArray[Double, Shape1[Count]] = linspace.apply
 }

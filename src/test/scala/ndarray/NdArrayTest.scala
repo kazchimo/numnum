@@ -216,5 +216,19 @@ class NdArrayTest extends AnyFunSpec {
         )
       }
     }
+
+    describe("linspace") {
+      it("should create a new NdArray filled with linspace") {
+        assert(
+          NdArray.linspace[_0, _5, _9].values == DenseMatrix
+            .create(1, 9, Array(0, 0.625, 1.25, 1.875, 2.5, 3.125, 3.75, 4.375, 5))
+        )
+        assert(NdArray.linspace[_0, _5, _0].values == DenseMatrix.create(1, 0, Array[Double]()))
+        assert(
+          NdArray.linspace[_5, _0, _9].values == DenseMatrix
+            .create(1, 9, Array(5, 4.375, 3.75, 3.125, 2.5, 1.875, 1.25, 0.625, 0))
+        )
+      }
+    }
   }
 }
