@@ -184,5 +184,14 @@ class NdArrayTest extends AnyFunSpec {
         )
       }
     }
+
+    describe("zeros") {
+      it("should create a new NdArray filled with zeros") {
+        assert(NdArray.zeros[Shape1[_3]].values == DenseMatrix.create(1, 3, Array(0, 0, 0)))
+        assert(
+          NdArray.zeros[Shape2[_2, _3]].values == DenseMatrix.create(2, 3, Array(0, 0, 0, 0, 0, 0))
+        )
+      }
+    }
   }
 }
