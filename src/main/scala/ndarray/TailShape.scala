@@ -16,6 +16,6 @@ object TailShape {
     new TailShape[Shape2[N1, N2]] {
       type Tail = Shape1[N2]
 
-      override def apply(): Shape1[N2] = Shape1[N2]()
+      override def apply(): Tail = Shape1[N2]()
     }
 }

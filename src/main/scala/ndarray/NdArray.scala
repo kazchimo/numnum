@@ -22,7 +22,7 @@ case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
 
   def toArray: Array[T] = values.toArray
 
-  def ndim[Len <: Nat](implicit ndim: Ndim.Aux[s.ShapeHL, Len]): Len = s.ndim
+  def ndim(implicit ndim: Ndim[s.ShapeHL]): ndim.Out = ndim()
 
   def shape[Instances <: HList](implicit
     liftAll: LiftAll.Aux[SummonNat, s.ShapeHL, Instances],
@@ -33,7 +33,7 @@ case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
 
   def any(implicit any: Any[DenseMatrix[T]]): Boolean = any(values)
 
-  def size[O <: Nat](implicit size: Size.Aux[s.ShapeHL, O]): O = s.size
+  def size(implicit size: Size[s.ShapeHL]): size.Out = size.apply
 
   def reshape[ToShape <: Shape, Head <: Nat](shape: ToShape)(implicit
     sameSize: SameSize[S, ToShape],

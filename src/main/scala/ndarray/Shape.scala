@@ -13,11 +13,11 @@ trait Shape {
     mapper: Mapper.Aux[applySummonNat.type, Instances, ShapeHL]
   ): ShapeHL = liftAll.instances.map(applySummonNat)
 
-  def ndim[Len <: Nat](implicit ndim: Ndim.Aux[ShapeHL, Len]): Len = ndim()
+  def ndim(implicit ndim: Ndim[ShapeHL]): ndim.Out = ndim()
 
-  def headSize[Head <: Nat](implicit headSize: HeadSize.Aux[ShapeHL, Head]): Int = headSize.int
+  def headSize(implicit headSize: HeadSize[ShapeHL]): Int = headSize.int
 
-  def tailShape[Tail <: Shape](implicit tailShape: TailShape.Aux[ShapeHL, Tail]): Tail = tailShape()
+  def tailShape(implicit tailShape: TailShape[ShapeHL]): tailShape.Tail = tailShape()
 
   def isShapeOf[N <: Nat, Len <: Nat](
     n: N
