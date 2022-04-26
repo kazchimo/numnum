@@ -175,5 +175,14 @@ class NdArrayTest extends AnyFunSpec {
         )
       }
     }
+
+    describe("ones") {
+      it("should create a new NdArray filled with ones") {
+        assert(NdArray.ones[Shape1[_3]].values == DenseMatrix.create(1, 3, Array(1, 1, 1)))
+        assert(
+          NdArray.ones[Shape2[_2, _3]].values == DenseMatrix.create(2, 3, Array(1, 1, 1, 1, 1, 1))
+        )
+      }
+    }
   }
 }

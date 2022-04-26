@@ -66,4 +66,6 @@ object NdArray {
   }
 
   def full[S <: Shape] = new FullPartiallyApplied[S]
+
+  def ones[S <: Shape](implicit full: Full.Aux[S, Int]) = new FullPartiallyApplied[S]()(1)
 }
