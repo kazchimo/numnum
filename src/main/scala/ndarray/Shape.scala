@@ -11,7 +11,7 @@ trait Shape {
 
   def ndim(implicit ndim: Ndim[ShapeHL]): ndim.Out = ndim()
 
-  def headSize(implicit headSize: HeadSize[ShapeHL]): Int = headSize.int
+  def headSize(implicit headSize: HeadSize[ShapeHL]): headSize.Out = headSize.apply
 
   def tailShape(implicit tailShape: TailShape[ShapeHL]): tailShape.Tail = tailShape()
 
