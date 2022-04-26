@@ -1,6 +1,5 @@
 package ndarray
 
-import shapeless.ops.hlist.Length
 import shapeless.ops.nat.Prod
 import shapeless.{::, HList, HNil, Nat, Poly2}
 
@@ -15,9 +14,7 @@ trait Shape {
 
   def tailShape(implicit tailShape: TailShape[ShapeHL]): tailShape.Tail = tailShape()
 
-  def isShapeOf[N <: Nat, Len <: Nat](
-    n: N
-  )(implicit len: Length.Aux[ShapeHL, Len], summon: SummonNat[Len]): Boolean = ndim == n
+  def isNdimOf[N <: Nat](implicit isNdimOf: IsNdimOf[ShapeHL, N]): isNdimOf.Out = isNdimOf.apply
 
   def size(implicit size: Size[ShapeHL]): size.Out = size.apply
 }

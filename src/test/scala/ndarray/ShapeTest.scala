@@ -38,8 +38,12 @@ class ShapeTest extends AnyFunSpec {
 
   describe("isShape1") {
     it("should return true if S is Shape1") {
-      assert(new Shape1[_3].isShapeOf(_1))
-      assert(new Shape2[_3, _5].isShapeOf(_2))
+      assert(new Shape1[_3].isNdimOf[_1])
+      assert(new Shape2[_3, _5].isNdimOf[_2])
+      assertCompiles("""val a: true = Shape1[_3].isNdimOf[_1]""")
+      assertCompiles("""val a: false = Shape1[_3].isNdimOf[_2]""")
+      assertCompiles("""val a: true = Shape2[_3, _5].isNdimOf[_2]""")
+      assertCompiles("""val a: false = Shape2[_3, _5].isNdimOf[_3]""")
     }
   }
 
