@@ -80,4 +80,6 @@ object NdArray {
   def linspace[Start <: Nat, End <: Nat, Count <: Nat](implicit
     linspace: Linspace[Start, End, Count]
   ): NdArray[Double, Shape1[Count]] = linspace.apply
+
+  def eye[Dim <: Nat](implicit eye: Eye[Dim]): NdArray2[Double, Dim, Dim] = eye.apply
 }

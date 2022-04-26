@@ -230,5 +230,11 @@ class NdArrayTest extends AnyFunSpec {
         )
       }
     }
+
+    describe("eye") {
+      it("should create a new eye matrix") {
+        assert(NdArray.eye[_3].values == DenseMatrix.eye[Double](3))
+      }
+    }
   }
 }
