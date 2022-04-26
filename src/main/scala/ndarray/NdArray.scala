@@ -31,11 +31,8 @@ case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
 
   def size(implicit size: Size[s.ShapeHL]): size.Out = size.apply
 
-  def reshape[ToShape <: Shape, Head <: Nat](shape: ToShape)(implicit
-    sameSize: SameSize[S, ToShape],
-    res: Reshape[ToShape],
-    validShape: ValidShape[ToShape]
-  ): NdArray[T, ToShape] = NdArray(values.reshape(res.row, res.column))(shape, validShape)
+  def reshape[ToShape <: Shape](implicit res: Reshape[T, S, ToShape]): NdArray[T, ToShape] =
+    res.apply(values)
 }
 
 object NdArray {

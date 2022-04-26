@@ -43,28 +43,26 @@ class NdArrayTest extends AnyFunSpec {
   describe("reshape") {
     it("should return a new array with the specified shape") {
       assert(
-        NdArray.arrange[_10].reshape(Shape.of2[_2, _5]).values == DenseMatrix
+        NdArray.arrange[_10].reshape[Shape2[_2, _5]].values == DenseMatrix
           .create(2, 5, Array.range(0, 10))
       )
       assert(
-        NdArray.arrange[_10].reshape(Shape.of2[_5, _2]).values == DenseMatrix
+        NdArray.arrange[_10].reshape[Shape2[_5, _2]].values == DenseMatrix
           .create(5, 2, Array.range(0, 10))
       )
       assert(
-        NdArray
-          .arrange[_10]
-          .reshape(Shape.of2[_2, _5])
-          .reshape(Shape.of1[_10])
-          .values == DenseMatrix.create(1, 10, Array.range(0, 10))
+        NdArray.arrange[_10].reshape[Shape2[_2, _5]].reshape[Shape1[_10]].values == DenseMatrix
+          .create(1, 10, Array.range(0, 10))
       )
     }
 
     it("should not compile if the shape is not compatible") {
       assertDoesNotCompile("""
-          NdArray.arrange(_10).reshape(Shape.of2[_2, _2])
+          NdArray.arrange[_10].reshape[Shape2[_2, _2]]
         """)
+
       assertDoesNotCompile("""
-          NdArray.arrange(_10).reshape(Shape.of2[_2, _5]).reshape(Shape.of1[_9])
+          NdArray.arrange[_10].reshape[Shape2[_2, _5]].reshape[Shape1[_9]]
         """)
     }
   }

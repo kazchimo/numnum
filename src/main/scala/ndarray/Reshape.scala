@@ -1,23 +1,29 @@
 package ndarray
 
+import breeze.linalg.DenseMatrix
 import ndarray.Shape.{Shape1, Shape2}
 import shapeless.Nat
 import shapeless.ops.nat.ToInt
 
-trait Reshape[S] {
-  def column: Int
-  def row: Int
+trait Reshape[T, From, To <: Shape] {
+  def apply(values: DenseMatrix[T]): NdArray[T, To]
 }
 
 object Reshape {
-  implicit def shape1Reshape[N <: Nat: ToInt]: Reshape[Shape1[N]] = new Reshape[Shape1[N]] {
-    def column: Int = ToInt[N].apply()
-    def row: Int    = 1
+  implicit def shape1Reshape[From <: Shape, N <: Nat: ToInt, T](implicit
+    sameSize: SameSize[From, Shape1[N]],
+    shape: Shape1[N],
+    validShape: ValidShape[Shape1[N]]
+  ): Reshape[T, From, Shape1[N]] = new Reshape[T, From, Shape1[N]] {
+    override def apply(values: DenseMatrix[T]): NdArray[T, Shape1[N]] =
+      NdArray(values.reshape(1, ToInt[N].apply()))
   }
 
-  implicit def shape2Reshape[N1 <: Nat: ToInt, N2 <: Nat: ToInt]: Reshape[Shape2[N1, N2]] =
-    new Reshape[Shape2[N1, N2]] {
-      def row: Int    = ToInt[N1].apply()
-      def column: Int = ToInt[N2].apply()
-    }
+  implicit def shape2Reshape[From <: Shape, N1 <: Nat: ToInt, N2 <: Nat: ToInt, T](implicit
+    sameSize: SameSize[From, Shape2[N1, N2]]
+  ): Reshape[T, From, Shape2[N1, N2]] = new Reshape[T, From, Shape2[N1, N2]] {
+
+    override def apply(values: DenseMatrix[T]): NdArray[T, Shape2[N1, N2]] =
+      NdArray(values.reshape(ToInt[N1].apply(), ToInt[N2].apply()))
+  }
 }
