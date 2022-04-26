@@ -1,7 +1,7 @@
 package ndarray
 
 import breeze.linalg.DenseMatrix
-import ndarray.Shape.Shape1
+import ndarray.Shape.{Shape1, Shape2}
 import org.scalatest.funspec.AnyFunSpec
 import shapeless.HNil
 import shapeless.Nat._
@@ -165,6 +165,16 @@ class NdArrayTest extends AnyFunSpec {
 
       it("should not compile without Shape type parameter") {
         assertDoesNotCompile("NdArray.array(Array(1, 2, 3))")
+      }
+    }
+
+    describe("full") {
+      it("should create a new NdArray filled with given value") {
+        assert(NdArray.full[Shape1[_3]](1).values == DenseMatrix.create(1, 3, Array(1, 1, 1)))
+        assert(
+          NdArray.full[Shape2[_2, _3]](1).values == DenseMatrix
+            .create(2, 3, Array(1, 1, 1, 1, 1, 1))
+        )
       }
     }
   }

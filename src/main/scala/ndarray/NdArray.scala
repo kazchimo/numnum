@@ -10,11 +10,18 @@ import shapeless.{HList, Nat, Succ}
 
 import scala.reflect.ClassTag
 
-case class NdArray[T, S <: Shape] private (values: DenseMatrix[T])(implicit
+case class NdArray[T, S <: Shape](values: DenseMatrix[T])(implicit
   val s: S,
   validShape: ValidShape[S]
 ) {
-  require(validShape(values))
+  require(
+    validShape(values),
+    s"""should be valid shape
+       |
+       |value row: ${values.rows}
+       |value col: ${values.cols}
+       |""".stripMargin
+  )
 
   def length: Int = values.size
 
@@ -95,7 +102,8 @@ object NdArray {
     array1(Array.range(Nat.toInt[Start], Nat.toInt[End], Nat.toInt[Interval]))
 
   class FullPartiallyApplied[S <: Shape] {
-    def apply[T](value: T) = ???
+    def apply[T: Zero: ClassTag](t: T)(implicit full: Full[S]): NdArray[T, S] = full(t)
   }
-  def full[T](t: T) = ???
+
+  def full[S <: Shape] = new FullPartiallyApplied[S]
 }
